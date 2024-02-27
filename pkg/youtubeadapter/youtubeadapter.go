@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/patrik-koska-clone/youtube-go/browser"
-	"github.com/patrik-koska-clone/youtube-go/config"
-	"github.com/patrik-koska-clone/youtube-go/utils"
+	"github.com/patrik-koska-clone/youtube-go/pkg/browser"
+	"github.com/patrik-koska-clone/youtube-go/pkg/config"
+	"github.com/patrik-koska-clone/youtube-go/pkg/utils"
 
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"

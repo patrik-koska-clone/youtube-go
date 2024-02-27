@@ -4,9 +4,9 @@ import (
 	"flag"
 	"log"
 
-	"github.com/patrik-koska-clone/youtube-go/config"
-	"github.com/patrik-koska-clone/youtube-go/desktop"
-	"github.com/patrik-koska-clone/youtube-go/youtubeadapter"
+	"github.com/patrik-koska-clone/youtube-go/pkg/config"
+	"github.com/patrik-koska-clone/youtube-go/pkg/desktop"
+	"github.com/patrik-koska-clone/youtube-go/pkg/youtubeadapter"
 )
 
 var configFilePath = "config.yaml"

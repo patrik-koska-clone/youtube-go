@@ -11,9 +11,9 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/patrik-koska-clone/youtube-go/config"
-	"github.com/patrik-koska-clone/youtube-go/utils"
-	"github.com/patrik-koska-clone/youtube-go/youtubeadapter"
+	"github.com/patrik-koska-clone/youtube-go/pkg/config"
+	"github.com/patrik-koska-clone/youtube-go/pkg/utils"
+	"github.com/patrik-koska-clone/youtube-go/pkg/youtubeadapter"
 )
 
 const smilingEmoji = "\U0001F60A"
