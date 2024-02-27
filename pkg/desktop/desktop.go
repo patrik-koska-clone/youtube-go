@@ -34,19 +34,83 @@ func (i IconContent) Content() []byte {
 }
 
 func OpenConsole(y youtubeadapter.YoutubeAdapter, c config.Config) {
-	var (
-		icon            IconContent
-		maxResultsInput *string
-		maxResults      *int64
-		err             error
-	)
 
 	YTChannelApp := app.New()
 
+	var buttonIcon IconContent
+
 	launchWindow := YTChannelApp.NewWindow("YouTube Channels - Only which matter")
 
+	label, input := CreateWidgets()
+
+	obj := CreateAnimation()
+
+	maxResultsButton, launchButton, versionButton := CreateButtons(&y, buttonIcon, &c, label, input)
+
+	launchTab, maxResultsTab, versionTab := CreateTabs(launchButton, maxResultsButton, versionButton, input)
+
+	tabs := container.NewAppTabs(
+		container.NewTabItem("Videos", launchTab),
+		container.NewTabItem("Max Results", maxResultsTab),
+		container.NewTabItem("Version", versionTab),
+	)
+
+	tabs.SetTabLocation(container.TabLocationLeading)
+
+	launchWindow.SetContent(container.NewVBox(
+		label,
+		tabs,
+		obj,
+	))
+
+	launchWindow.Resize(fyne.NewSize(850, 400))
+	launchWindow.ShowAndRun()
+}
+
+func CreateButtons(y *youtubeadapter.YoutubeAdapter,
+	icon IconContent,
+	c *config.Config,
+	label *widget.Label,
+	input *widget.Entry) (*widget.Button, *widget.Button, *widget.Button) {
+
+	var (
+		maxResults int64
+		err        error
+	)
+
+	maxResultsButton := widget.NewButton("Save maximum", func() {
+
+		maxResults, err = utils.ConvertStrToInt64(input.Text)
+		if err != nil {
+			log.Fatalf("could not parse ui input\n%v", err)
+		}
+
+		label.SetText("Maximum set to " + input.Text)
+	})
+
+	launchButton := widget.NewButtonWithIcon("Launch video", icon, func() {
+		if maxResults == 0 {
+			log.Println("Max results not set or set to 0")
+			return
+		}
+		label.SetText("Video launched.")
+		err := y.LoadNewVideo(*c, maxResults)
+		if err != nil {
+			log.Fatalf("console crashed\n%v", err)
+		}
+	})
+
+	versionButton := widget.NewButton("Version", func() {
+
+		label.SetText("version: " + c.Version)
+	})
+
+	return maxResultsButton, launchButton, versionButton
+}
+
+func CreateAnimation() *canvas.Rectangle {
 	obj := canvas.NewRectangle(color.Black)
-	obj.SetMinSize(fyne.NewSize(500, 500))
+	obj.SetMinSize(fyne.NewSize(50, 160))
 
 	red := color.NRGBA{R: 0xff, A: 0xff}
 	blue := color.NRGBA{B: 0xff, A: 0xff}
@@ -56,35 +120,41 @@ func OpenConsole(y youtubeadapter.YoutubeAdapter, c config.Config) {
 		canvas.Refresh(obj)
 	}).Start()
 
-	label := widget.NewLabel("Recommendations? No thanks " + smilingEmoji)
+	return obj
+}
+
+func CreateWidgets() (*widget.Label, *widget.Entry) {
+
+	label := widget.NewLabelWithStyle("Recommendations? No thanks "+smilingEmoji, fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 
 	input := widget.NewEntry()
 	input.SetPlaceHolder("Enter maximum number of search results..")
 
-	maxResultsButton := widget.NewButton("Save maximum", func() {
-		maxResultsInput = &input.Text
-		maxResults, err = utils.ConvertStrToInt64(maxResultsInput)
-		if err != nil {
-			log.Fatalf("could not parse ui input\n%v", err)
-		}
-	})
+	return label, input
+}
 
-	launchButton := widget.NewButtonWithIcon("Launch video", icon, func() {
-		label.SetText("opening...")
-		err := y.LoadNewVideo(c, *maxResults)
-		if err != nil {
-			log.Fatalf("console crashed\n%v", err)
-		}
-	})
+func CreateTabs(launchButton *widget.Button,
+	maxResultsButton *widget.Button,
+	versionButton *widget.Button,
+	input *widget.Entry) (*fyne.Container, *fyne.Container, *fyne.Container) {
 
-	launchWindow.SetContent(container.NewVBox(
-		label,
+	icon := canvas.NewImageFromFile("static/content/gopher-youtube.png")
+	icon.FillMode = canvas.ImageFillContain
+	icon.SetMinSize(fyne.NewSize(400, 400))
+
+	VideoTab := container.NewVBox(
+		icon,
 		launchButton,
+	)
+
+	MaxResultsTab := container.NewVBox(
 		input,
 		maxResultsButton,
-		obj,
-	))
+	)
 
-	launchWindow.Resize(fyne.NewSize(500, 500))
-	launchWindow.ShowAndRun()
+	VersionTab := container.NewVBox(
+		versionButton,
+	)
+
+	return VideoTab, MaxResultsTab, VersionTab
 }

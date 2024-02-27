@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	ApiKey string `yaml:"apiKey"`
+	Version string `yaml:"version"`
+	ApiKey  string `yaml:"apiKey"`
 
 	ChannelConfig struct {
 		ChannelList []string `yaml:"channelList"`
