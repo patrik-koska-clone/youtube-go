@@ -1,0 +1,6 @@
+apiKey: "your-developer/api-key-here"
+channelConfig:
+  channelList:
+    - MyFavChannel1
+    - MyFavChannel2
+    - MyFavChannel3
