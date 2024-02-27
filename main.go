@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 
 	"github.com/patrik-koska-clone/youtube-go/pkg/config"
@@ -10,10 +9,6 @@ import (
 )
 
 var configFilePath = "config.yaml"
-
-func init() {
-	flag.Parse()
-}
 
 func main() {
 	c, err := config.ReadConfig(configFilePath)
