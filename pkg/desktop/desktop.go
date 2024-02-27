@@ -39,7 +39,7 @@ func OpenConsole(y youtubeadapter.YoutubeAdapter, c config.Config) {
 
 	var buttonIcon IconContent
 
-	launchWindow := YTChannelApp.NewWindow("YouTube Channels - Only which matter")
+	launchWindow := YTChannelApp.NewWindow("YouTube-Go - youtube channels and stuff")
 
 	label, input := CreateWidgets()
 
@@ -78,7 +78,7 @@ func CreateButtons(y *youtubeadapter.YoutubeAdapter,
 		err        error
 	)
 
-	maxResultsButton := widget.NewButton("Save maximum", func() {
+	maxResultsButton := widget.NewButton("Apply", func() {
 
 		maxResults, err = utils.ConvertStrToInt64(input.Text)
 		if err != nil {
